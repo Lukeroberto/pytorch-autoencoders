@@ -24,6 +24,7 @@ test_set  = dset.MNIST(root=root, train=False, transform=trans, download=True)
 
 batch_size = 100
 
+
 train_loader = torch.utils.data.DataLoader(
                 dataset=train_set, 
                 batch_size=batch_size,
@@ -33,7 +34,6 @@ test_loader = torch.utils.data.DataLoader(
                 dataset=test_set, 
                 batch_size=batch_size,
                 shuffle=True)
-
 
 # Network
 class AutoEncoder(nn.Module):
@@ -63,8 +63,11 @@ class AutoEncoder(nn.Module):
     def name(self):
         return "AutoEncoder"
 
-
 model = AutoEncoder()
+
+use_cuda = torch.cuda.is_available()
+if use_cuda:
+    model = model.cuda()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
@@ -76,7 +79,11 @@ for epoch in range(10):
     # Training
     print("Training")
     for batch_idx, (x, target) in enumerate(train_loader):
+
         optimizer.zero_grad()
+
+        if use_cuda:
+            x = x.cuda()
 
         x = Variable(x)
         output = model(x)
@@ -89,12 +96,19 @@ for epoch in range(10):
         if (batch_idx+1) % 100 == 0 or (batch_idx+1) == len(train_loader):
             print("Epoch: {}, Batch index: {}, Train Loss: {:.6f}".format(epoch, batch_idx+1, loss))
     
-
+    
     print("Train Results")
     fig, (ax1, ax2) = plt.subplots(1, 2)
     
-    input = x.view(-1, 28, 28, 1).detach().numpy()
-    out = model(x).view(-1, 28, 28, 1).detach().numpy()
+    input = x.view(-1, 28, 28, 1).detach()
+    out = model(x).view(-1, 28, 28, 1).detach()
+    
+    if use_cuda:
+        input = input.cpu()
+        out = out.cpu()
+    else: 
+        input = input.numpy()
+        input = input.numpy()
 
     ax1.imshow(np.squeeze(input[0, :, :, :]))
     ax2.imshow(np.squeeze(out[0, :, :, :]))
