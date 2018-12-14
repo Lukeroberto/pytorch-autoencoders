@@ -89,7 +89,7 @@ for epoch in range(10):
         output = model(x)
 
         loss  = mse_loss(output, x.view(-1, 28*28))
-        
+
         loss.backward()
         optimizer.step()
 
@@ -106,9 +106,6 @@ for epoch in range(10):
     if use_cuda:
         input = input.cpu()
         out = out.cpu()
-    else: 
-        input = input.numpy()
-        input = input.numpy()
 
     ax1.imshow(np.squeeze(input[0, :, :, :]))
     ax2.imshow(np.squeeze(out[0, :, :, :]))
