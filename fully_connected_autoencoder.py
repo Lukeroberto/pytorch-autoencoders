@@ -114,3 +114,6 @@ for epoch in range(10):
     ax2.imshow(np.squeeze(out[0, :, :, :]))
     
     plt.savefig(img + "/train_target_{}_epoch_{}.png".format(target[0],epoch))
+
+# Save Model
+torch.save(model.state_dict(), img + "/" + model.name())
