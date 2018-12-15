@@ -19,7 +19,7 @@ if not os.path.exists(img):
 
 learning_rate = 1e-3
 batch_size = 128
-num_epochs = range(10)
+num_epochs = range(50)
 
 trans = transforms.Compose([transforms.ToTensor()])
 train_set = dset.MNIST(root=root, train=True, transform=trans, download=True)
@@ -54,6 +54,9 @@ class AutoEncoder(nn.Module):
         x = self.encoder(x)
         x = self.decoder(x)
         return x
+
+    def name(self):
+        return "ConvAutoEncoder"
 
 model = AutoEncoder()
 use_cuda = torch.cuda.is_available()
@@ -104,6 +107,6 @@ for epoch in num_epochs:
     plt.savefig(img + "/train_target_{}_epoch_{}.png".format(target[0], epoch))
 
 # Save Model
-torch.save(model.state_dict(), image + "/" + model.name())
+torch.save(model.state_dict(), img + "/" + model.name())
 
     
