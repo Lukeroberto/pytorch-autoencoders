@@ -22,8 +22,7 @@ trans = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), 
 train_set = dset.MNIST(root=root, train=True, transform=trans, download=True)
 test_set  = dset.MNIST(root=root, train=False, transform=trans, download=True)
 
-batch_size = 100
-
+batch_size = 128
 
 train_loader = torch.utils.data.DataLoader(
                 dataset=train_set, 
@@ -69,7 +68,7 @@ use_cuda = torch.cuda.is_available()
 if use_cuda:
     model = model.cuda()
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
 
 def mse_loss(input, target):
     return torch.sum((input - target) ** 2)
