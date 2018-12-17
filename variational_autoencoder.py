@@ -118,3 +118,9 @@ def train(epoch):
 for ep in range(0,11):
     print("Training... Epoch: {}".format(ep))
     train(ep)
+
+    with torch.no_grad():
+            sample = torch.randn(64, 20).to(device)
+            sample = model.decode(sample).cpu()
+            save_image(sample.view(64, 1, 28, 28),
+            images + '/vae_sample_' + str(ep) + '.png')
